@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using System.IO;
 using Microsoft.AspNetCore.Identity;
 using CredenciaisService.Entidades;
+using CredenciaisService.Context;
 
 namespace CredenciaisService
 {
@@ -48,16 +49,16 @@ namespace CredenciaisService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            logger.LogInformation("Conectando ao banco de dados : {0}", 
-                Configuration.GetConnectionString("DefaultConnection"));
+            if (!Environment.IsProduction()) 
+                logger.LogInformation("=========>>>>>>>Conectando ao banco de dados : {0}",
+                    Configuration.GetConnectionString("DefaultConnection"));
 
             services.AddRouting(options => { options.LowercaseUrls = true; });
             services.AddMvc();
                         
             services.AddDbContext<AplicacaoContext>(options =>
             {
-                //options.UseLazyLoadingProxies();
-                //options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                // options.UseSqlLite(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddIdentity<Usuario, IdentityRole<Guid>>()
