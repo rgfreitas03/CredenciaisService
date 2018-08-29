@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <UserSecretsId>aspnet-CredenciaisService-7EB28DCC-89C6-4735-9062-F97BF7B6BDDE</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureADB2C.UI" Version="2.1.1" />
+    <PackageReference Include="microsoft.aspnetcore.identity" Version="2.1.2" />
+    <PackageReference Include="npgsql" Version="4.0.2" />
+    <PackageReference Include="swashbuckle.aspnetcore" Version="3.0.0" />
+    <PackageReference Include="swashbuckle.aspnetcore.swagger" Version="3.0.0" />
+  </ItemGroup>
+
+</Project>
