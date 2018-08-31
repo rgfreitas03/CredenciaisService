@@ -16,6 +16,9 @@ using System.IO;
 using Microsoft.AspNetCore.Identity;
 using CredenciaisService.Entidades;
 using CredenciaisService.Context;
+using IdentityServer4;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CredenciaisService
 {
@@ -64,6 +67,35 @@ namespace CredenciaisService
             services.AddIdentity<Usuario, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<AplicacaoContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddIdentityServer();
+            services.AddAuthentication()
+                .AddGoogle("Google", options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = "708996912208-9m4dkjb5hscn7cjrn5u0r4tbgkbj1fko.apps.googleusercontent.com";
+                    options.ClientSecret = "wdfPY6t8H8cecgjlxud__4Gh";
+                })
+                .AddOpenIdConnect("demoidsrv", "IdentityServer", options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+
+                    options.Authority = "https://demo.identityserver.io/";
+                    options.ClientId = "implicit";
+                    options.ResponseType = "id_token";
+                    options.SaveTokens = true;
+                    options.CallbackPath = new PathString("/signin-idsrv");
+                    options.SignedOutCallbackPath = new PathString("/signout-callback-idsrv");
+                    options.RemoteSignOutPath = new PathString("/signout-idsrv");
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "name",
+                        RoleClaimType = "role"
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +110,7 @@ namespace CredenciaisService
                 app.UseHsts();
             }
 
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
